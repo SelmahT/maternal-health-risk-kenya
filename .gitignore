@@ -1,0 +1,24 @@
+# ── DHS Dataset — Do not commit (DHS data use agreement prohibits redistribution)
+01_Data/raw/
+01_Data/processed/*.csv
+01_Data/processed/*.pkl
+
+# ── Trained models (too large for GitHub)
+03_Models_Saved/
+
+# ── Python environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# ── Jupyter checkpoints
+.ipynb_checkpoints/
+
+# ── OS files
+.DS_Store
+Thumbs.db
+
+# ── VS Code settings
+.vscode/
