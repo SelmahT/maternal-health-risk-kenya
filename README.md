@@ -1,4 +1,74 @@
+# 🏥 Maternal Health Risk Prediction in Kenya
+### DSA 3900 — Final Year Project | USIU-Africa
 
+**Student:** Selmah Tzindori Mise | ID: 669602  
+**Programme:** B.Sc. Data Science and Analytics  
+**Institution:** United States International University – Africa, Nairobi, Kenya  
+**Supervisor:** ___________________________  
+**Academic Year:** 2026–2027  
+
+---
+
+## Project Overview
+
+A machine learning system that predicts individual maternal health risk 
+(Low / Moderate / High) for pregnant women in Kenya using the Kenya 
+Demographic and Health Survey 2022 (KDHS 2022).
+
+The system combines:
+- **Novel tabular deep learning** — TabNet and TabTransformer
+- **Classical ensemble models** — Random Forest, XGBoost, CatBoost
+- **Bayesian inference** — probabilistic risk scores with credible intervals
+- **SHAP explainability** — plain-language risk factor attribution
+- **AI API integration** — automated explanations and referral letters
+- **Streamlit web app** — deployable CHW-facing decision support tool
+
+---
+
+## Research Objectives
+
+| # | Objective |
+|---|---|
+| SO1 | Build and evaluate ML models (including TabNet & TabTransformer) for maternal risk classification using KDHS 2022 |
+| SO2 | Apply Bayesian inference (PyMC) to generate calibrated probability scores with 95% credible intervals |
+| SO3 | Deploy an AI API-integrated Streamlit app generating risk explanations and referral letters for CHWs |
+
+---
+
+## Tech Stack
+
+| Category | Tools |
+|---|---|
+| Language | Python 3.11 |
+| Data | pandas, numpy |
+| ML Models | scikit-learn, xgboost, catboost, pytorch-tabnet, tab-transformer-pytorch |
+| Bayesian | pymc, arviz |
+| Explainability | shap |
+| Optimisation | optuna |
+| Imbalanced data | imbalanced-learn (SMOTE) |
+| Visualisation | matplotlib, seaborn |
+| App | streamlit |
+| Environment | VS Code + virtualenv |
+
+---
+
+## Dataset
+
+| Detail | Info |
+|---|---|
+| Name | Kenya Demographic and Health Survey 2022 |
+| Source | DHS Program — dhsprogram.com |
+| File | KEIR8CFL.DTA (Individual Recode) |
+| Size | 32,156 rows × 5,925 columns |
+| Working dataset | 10,391 rows × 13 columns |
+| Access | Requires DHS Program registration and data use agreement |
+
+> ⚠️ The raw dataset is not included in this repository.  
+> See `01_Data/raw/DATA_README.md` for access instructions.
+
+---
+
+## Project Structure
 ---
 
 ## Target Variable
