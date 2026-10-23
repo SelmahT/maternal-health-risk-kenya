@@ -1,7 +1,7 @@
 # ── DHS Dataset — Do not commit (DHS data use agreement prohibits redistribution)
 01_Data/raw/
 01_Data/processed/*.csv
-01_Data/processed/*.pkl
+01_Data/processed/*.pkl 
 
 # ── Trained models (too large for GitHub)
 03_Models_Saved/
@@ -22,3 +22,10 @@ Thumbs.db
 
 # ── VS Code settings
 .vscode/
+# Large model artefacts � retrain locally
+07_Pilot_Test/Models_Saved/*.pkl
+07_Pilot_Test/Models_Saved/*.pt
+07_Pilot_Test/Models_Saved/*.zip
+03_Models_Saved/*.pkl
+03_Models_Saved/*.pt
+03_Models_Saved/*.zip

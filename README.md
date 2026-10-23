@@ -38,75 +38,107 @@ pregnant women daily with no data-driven risk tool. This project builds one.
 DSA3900_MaternalHealthRisk/
 │
 ├── 01_Data/
-│ ├── raw/ ← KDHS 2022 files (not in repo — see DATA_README)
-│ └── processed/ ← Cleaned train/val/test splits (CSV)
-│ ├── X_train.csv ← SMOTE-balanced training features (1,269 × 13)
-│ ├── X_val.csv ← Validation features (150 × 13)
-│ ├── X_test.csv ← Held-out test features (150 × 13)
-│ ├── y_train.csv ← Training labels
-│ ├── y_val.csv ← Validation labels
-│ ├── y_test.csv ← Test labels
-│ └── pilot_full_processed.csv
+│   ├── raw/                              ← KDHS 2022 files (not in repo — see DATA_README)
+│   └── processed/                        ← Implementation-phase datasets
+│       ├── 00_kdhs_clean.csv             ← 10,391 women × 24 cols (features + flags + target)
+│       ├── X_train.csv                   ← SMOTE-balanced training features
+│       ├── X_val.csv                     ← Validation features
+│       ├── X_test.csv                    ← Held-out test features
+│       ├── y_train.csv                   ← Training labels
+│       ├── y_val.csv                     ← Validation labels
+│       └── y_test.csv                    ← Test labels
 │
-├── 02_Notebooks/ ← Main project notebooks (implementation phase)
-│ ├── EDA/
-│ ├── Preprocessing/
-│ ├── Models/
-│ ├── Bayesian/
-│ └── SHAP/
+├── 02_Notebooks/                         ← Implementation notebooks (real KDHS data)
+│   ├── EDA/
+│   │   └── 00_DataLoading_EDA.ipynb      ← Real data exploration ✅
+│   ├── Preprocessing/
+│   │   └── 01_Preprocessing.ipynb
+│   ├── Models/
+│   │   ├── 02_Baseline_Models.ipynb
+│   │   ├── 03_Classical_Models_Optuna.ipynb
+│   │   ├── 04_Novel_Models_Optuna.ipynb
+│   │   └── 05_Stacking_Ensemble.ipynb
+│   ├── Bayesian/
+│   │   └── 06_Bayesian_Inference.ipynb
+│   └── SHAP/
+│       └── 07_SHAP_Explainability.ipynb
 │
-├── 03_Models_Saved/ ← Trained model files
-│ ├── scaler.pkl ← StandardScaler fitted on training data
-│ ├── lr_model.pkl ← Logistic Regression baseline
-│ ├── dt_model.pkl ← Decision Tree baseline
-│ ├── rf_model.pkl ← Random Forest
-│ ├── xgb_model.pkl ← XGBoost
-│ ├── cat_model.pkl ← CatBoost (Tier 2 champion)
-│ ├── tabnet_model.zip ← TabNet (pytorch-tabnet format)
-│ ├── tabtransformer_best.pt ← TabTransformer best weights (PyTorch)
-│ └── stacking_meta_learner_weighted.pkl ← Final weighted stacking ensemble
+├── 03_Models_Saved/                      ← Implementation model artefacts (populated after training)
+│   ├── scaler.pkl
+│   ├── lr_model.pkl
+│   ├── dt_model.pkl
+│   ├── rf_model.pkl
+│   ├── xgb_model.pkl
+│   ├── cat_model.pkl
+│   ├── tabnet_model.zip
+│   ├── tabtransformer_best.pt
+│   └── stacking_meta_learner_weighted.pkl
 │
 ├── 04_Outputs/
-│ ├── figures/ ← Saved plots and charts
-│ ├── results/ ← Metrics tables and CSVs
-│ └── reports/ ← Final write-ups
+│   ├── figures/                          ← Saved plots and charts
+│   ├── results/                          ← Metrics tables and CSVs
+│   └── reports/                          ← Final write-ups
 │
-├── 05_App/ ← Streamlit application
+├── 05_App/                               ← Streamlit application (deployment)
+│   └── app.py
 │
-├── 06_Documents/ ← Proposal, reports, presentations
+├── 06_Documentation/                     ← Proposal, pilot report, presentations
+│   ├── proposal_documentation/
+│   ├── presentation/
+│   └── reports/
 │
-└── 07_Pilot_Test/ ← ✅ COMPLETED — Pilot test with simulated data
-├── simulated_data/
-│ └── simulated_kdhs_1000.csv ← 1,000 synthetic records (KDHS-mirroring)
-├── notebooks/
-│ ├── 00_Pilot_DataSimulation.ipynb
-│ ├── 01_Pilot_Preprocessing.ipynb
-│ ├── 02_Pilot_BaselineModels.ipynb
-│ ├── 03_Pilot_AdvancedModels.ipynb
-│ ├── 04_Pilot_NovelModels.ipynb
-│ ├── 05_Pilot_StackingEnsemble.ipynb
-│ ├── 06_Pilot_Bayesian.ipynb
-│ └── 07_Pilot_SHAP.ipynb
-├── results/
-│ ├── 01_variable_distributions.png
-│ ├── 02_flag_contributions.png
-│ ├── 03_baseline_comparison.png
-│ ├── 04_all_models_comparison.png
-│ ├── 05_final_leaderboard.png
-│ ├── 06_shap_global_importance.png
-│ ├── 07_shap_summary.png
-│ ├── 08_shap_waterfall.png
-│ ├── bayesian_posteriors.png
-│ ├── bayesian_trace.png
-│ ├── bayesian_predictions.csv
-│ ├── baseline_results.csv
-│ ├── all_results_so_far.csv
-│ ├── final_all_results.csv
-│ ├── meta_learner_comparison.png
-│ ├── shap_values_high_risk.csv
-│ └── cm_*.png ← Confusion matrices (all models)
-└── app_test/
-└── 08_Pilot_App.py ← Working Streamlit prototype
+└── 07_Pilot_Test/                        ← ✅ COMPLETE — Pilot on 1,000 simulated records
+    ├── pilot_data/
+    │   ├── raw/
+    │   │   └── simulated_kdhs_1000.csv   ← 1,000 synthetic records (KDHS-mirroring)
+    │   └── processed/
+    │       ├── X_train.csv               ← SMOTE-balanced training features (1,269 × 13)
+    │       ├── X_val.csv                 ← Validation features (150 × 13)
+    │       ├── X_test.csv                ← Held-out test features (150 × 13)
+    │       ├── y_train.csv
+    │       ├── y_val.csv
+    │       ├── y_test.csv
+    │       └── pilot_full_processed.csv
+    ├── notebooks/
+    │   ├── 00_Pilot_DataSimulation.ipynb
+    │   ├── 01_Pilot_Preprocessing.ipynb
+    │   ├── 02_Pilot_BaselineModels.ipynb
+    │   ├── 03_Pilot_AdvancedModels.ipynb
+    │   ├── 04_Pilot_NovelModels.ipynb
+    │   ├── 05_Pilot_StackingEnsemble.ipynb
+    │   ├── 06_Pilot_Bayesian.ipynb
+    │   └── 07_Pilot_SHAP.ipynb
+    ├── Models_Saved/                     ← Pilot model artefacts
+    │   ├── scaler.pkl
+    │   ├── lr_model.pkl
+    │   ├── dt_model.pkl
+    │   ├── rf_model.pkl
+    │   ├── xgb_model.pkl
+    │   ├── cat_model.pkl
+    │   ├── tabnet_model.zip
+    │   ├── tabtransformer_best.pt
+    │   └── stacking_meta_learner_weighted.pkl
+    ├── results/
+    │   ├── 01_variable_distributions.png
+    │   ├── 02_flag_contributions.png
+    │   ├── 03_baseline_comparison.png
+    │   ├── 04_all_models_comparison.png
+    │   ├── 05_final_leaderboard.png
+    │   ├── 06_shap_global_importance.png
+    │   ├── 07_shap_summary.png
+    │   ├── 08_shap_waterfall.png
+    │   ├── bayesian_posteriors.png
+    │   ├── bayesian_trace.png
+    │   ├── bayesian_predictions.csv
+    │   ├── baseline_results.csv
+    │   ├── all_results_so_far.csv
+    │   ├── final_all_results.csv
+    │   ├── meta_learner_comparison.png
+    │   ├── shap_values_high_risk.csv
+    │   └── cm_*.png                      ← Confusion matrices (all models)
+    └── app_test/
+        └── 08_Pilot_App.py               ← Working Streamlit prototype
+
 ---
 
 ## 🧪 Pilot Test — Full Results Summary

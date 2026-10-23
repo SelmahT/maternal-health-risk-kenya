@@ -1,0 +1,15 @@
+{
+  "model": "Bayesian Multinomial Logistic Regression",
+  "library": "PyMC v6.3.2",
+  "sampler": "NUTS",
+  "chains": 4,
+  "draws_per_chain": 1000,
+  "tune_per_chain": 1000,
+  "total_samples": 4000,
+  "n_features": 9,
+  "n_classes": 3,
+  "max_rhat": 1.003369589946112,
+  "min_ess": 3477.1192782446847,
+  "accuracy_test": 0.9,
+  "random_seed": 42
+}
