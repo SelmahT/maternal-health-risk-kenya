@@ -1,0 +1,1173 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+<title>Maternal Health Risk Pilot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+/* ─── Design tokens ─────────────────────────────────────────── */
+:root {
+  /* Layout: 3-col academic poster, portrait scroll on screen */
+  --navy:    #0D2B4E;
+  --teal:    #1A7E8F;
+  --teal-lt: #2AA6BB;
+  --gold:    #C8953A;
+  --red:     #C94040;
+  --green:   #2A8C5E;
+  --bg:      #F5F6F8;
+  --panel:   #FFFFFF;
+  --border:  #DDE1E8;
+  --text:    #1A1F2C;
+  --muted:   #5A6378;
+  --label:   #8490AA;
+
+  --ff-head:  'Merriweather', Georgia, serif;
+  --ff-body:  'Inter', system-ui, sans-serif;
+  --ff-mono:  'JetBrains Mono', 'Courier New', monospace;
+
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:     #0E1118;
+    --panel:  #161B27;
+    --border: #252D3F;
+    --text:   #E8ECF4;
+    --muted:  #8D96AE;
+    --label:  #6A748A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:     #0E1118;
+  --panel:  #161B27;
+  --border: #252D3F;
+  --text:   #E8ECF4;
+  --muted:  #8D96AE;
+  --label:  #6A748A;
+  color-scheme: dark;
+}
+
+/* ─── Reset & base ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--ff-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--bg);
+  padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+  padding-left:  max(0px, env(safe-area-inset-left, 0px));
+  padding-right: max(0px, env(safe-area-inset-right, 0px));
+}
+
+/* ─── Poster wrapper ────────────────────────────────────────── */
+.poster {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  background: var(--panel);
+  box-shadow: 0 4px 40px rgba(0,0,0,.18);
+}
+
+/* ─── HEADER ─────────────────────────────────────────────────── */
+.poster-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 28px 36px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.poster-header::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 340px;
+  background: linear-gradient(135deg, transparent 40%, rgba(26,126,143,.35) 100%);
+  pointer-events: none;
+}
+.poster-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--teal) 50%, var(--gold) 100%);
+}
+.header-badge {
+  display: inline-block;
+  background: rgba(200,149,58,.25);
+  border: 1px solid rgba(200,149,58,.5);
+  color: #f4c96e;
+  font-family: var(--ff-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.poster-title {
+  font-family: var(--ff-head);
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #fff;
+  max-width: 860px;
+  text-wrap: balance;
+  margin-bottom: 14px;
+}
+.poster-title em {
+  color: #7dd6e3;
+  font-style: normal;
+}
+.header-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.meta-block { }
+.meta-label {
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 2px;
+}
+.meta-value {
+  font-size: 12px;
+  color: rgba(255,255,255,.9);
+  font-weight: 500;
+}
+.meta-value a { color: #7dd6e3; text-decoration: none; }
+
+.header-stats {
+  display: flex;
+  gap: 0;
+  margin-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 14px;
+}
+.hstat {
+  flex: 1;
+  padding-right: 20px;
+  border-right: 1px solid rgba(255,255,255,.12);
+  margin-right: 20px;
+}
+.hstat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.hstat-num {
+  font-family: var(--ff-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: #7dd6e3;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.hstat-num sup { font-size: 12px; }
+.hstat-label {
+  font-size: 10px;
+  color: rgba(255,255,255,.55);
+  line-height: 1.3;
+}
+
+/* ─── BODY ─────────────────────────────────────────────────── */
+.poster-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  padding: 1px;
+}
+.col {
+  background: var(--bg);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.col-wide {
+  grid-column: 1 / -1;
+  background: var(--bg);
+  padding: 16px 18px;
+}
+
+/* ─── Section block ─────────────────────────────────────────── */
+.section {
+  background: var(--panel);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 7px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(90deg, var(--navy) 0%, color-mix(in srgb, var(--navy) 85%, var(--teal)) 100%);
+}
+.section-head.teal  { background: linear-gradient(90deg, var(--teal) 0%, var(--teal-lt) 100%); }
+.section-head.gold  { background: linear-gradient(90deg, #8A5E1A 0%, var(--gold) 100%); }
+.section-head.green { background: linear-gradient(90deg, #1A5E40 0%, var(--green) 100%); }
+.section-head.red   { background: linear-gradient(90deg, #8A2020 0%, var(--red) 100%); }
+.section-icon {
+  font-size: 13px;
+  opacity: .9;
+}
+.section-title {
+  font-family: var(--ff-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.section-body {
+  padding: 11px 12px;
+}
+
+/* ─── Typography ────────────────────────────────────────────── */
+p { margin-bottom: 6px; font-size: 12px; color: var(--text); }
+p:last-child { margin-bottom: 0; }
+strong { font-weight: 600; color: var(--text); }
+ul, ol { padding-left: 15px; }
+li { font-size: 12px; margin-bottom: 3px; color: var(--text); }
+li::marker { color: var(--teal); }
+
+/* ─── Result tables ─────────────────────────────────────────── */
+.rtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.rtable thead tr {
+  background: color-mix(in srgb, var(--navy) 8%, var(--panel));
+  border-bottom: 2px solid var(--navy);
+}
+.rtable th {
+  padding: 5px 7px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+:root[data-theme="dark"] .rtable th,
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .rtable th { color: var(--teal-lt); } }
+.rtable tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--teal) 4%, var(--panel));
+}
+.rtable td {
+  padding: 5px 7px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.rtable tbody tr:last-child td { border-bottom: none; }
+.rtable tr.champion { background: color-mix(in srgb, var(--gold) 12%, var(--panel)) !important; }
+.rtable tr.best     { background: color-mix(in srgb, var(--green) 10%, var(--panel)) !important; }
+
+.num { font-family: var(--ff-mono); font-size: 11px; }
+.num.hi  { color: var(--green); font-weight: 600; }
+.num.ok  { color: var(--teal);  }
+.num.lo  { color: var(--muted); }
+.num.warn{ color: var(--gold);  font-weight: 600; }
+.num.top { color: var(--navy);  font-weight: 700; }
+:root[data-theme="dark"] .num.top { color: #7dd6e3; }
+
+/* ─── Metric chips ──────────────────────────────────────────── */
+.chip-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--teal) 8%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--teal) 20%, var(--border));
+  min-width: 70px;
+  flex: 1;
+}
+.chip.gold-chip {
+  background: color-mix(in srgb, var(--gold) 10%, var(--panel));
+  border-color: color-mix(in srgb, var(--gold) 30%, var(--border));
+}
+.chip.green-chip {
+  background: color-mix(in srgb, var(--green) 10%, var(--panel));
+  border-color: color-mix(in srgb, var(--green) 25%, var(--border));
+}
+.chip-val {
+  font-family: var(--ff-mono);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--teal);
+  line-height: 1;
+}
+.chip.gold-chip  .chip-val { color: var(--gold); }
+.chip.green-chip .chip-val { color: var(--green); }
+.chip-label {
+  font-size: 9px;
+  color: var(--label);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-top: 3px;
+  text-align: center;
+}
+
+/* ─── Inline stat ───────────────────────────────────────────── */
+.kv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+}
+.kv { }
+.kv-k { font-size: 9px; color: var(--label); text-transform: uppercase; letter-spacing: .07em; }
+.kv-v { font-family: var(--ff-mono); font-size: 12px; font-weight: 600; color: var(--text); }
+
+/* ─── Flag bars ─────────────────────────────────────────────── */
+.flag-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 10px;
+  margin-top: 6px;
+}
+.flag-item { }
+.flag-name { font-size: 10px; color: var(--muted); margin-bottom: 2px; }
+.flag-bar-wrap {
+  background: var(--border);
+  border-radius: 3px;
+  height: 8px;
+  overflow: hidden;
+}
+.flag-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--teal);
+  transition: width .3s ease;
+}
+.flag-bar.hi { background: var(--red); }
+
+/* ─── SHAP bars ─────────────────────────────────────────────── */
+.shap-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+.shap-var {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  color: var(--navy);
+  width: 52px;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+:root[data-theme="dark"] .shap-var { color: var(--teal-lt); }
+.shap-bar-wrap {
+  flex: 1;
+  background: var(--border);
+  border-radius: 3px;
+  height: 10px;
+}
+.shap-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--navy), var(--teal));
+}
+.shap-num {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  color: var(--teal);
+  font-weight: 600;
+  width: 36px;
+  text-align: right;
+}
+.shap-meaning {
+  font-size: 9px;
+  color: var(--muted);
+  width: 100px;
+}
+
+/* ─── Risk distribution ─────────────────────────────────────── */
+.risk-bar {
+  display: flex;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 2px;
+  margin: 8px 0 4px;
+}
+.risk-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--ff-mono);
+  transition: width .3s;
+}
+.risk-seg.low { background: var(--green); }
+.risk-seg.mod { background: var(--gold); }
+.risk-seg.hi  { background: var(--red); }
+.risk-legend {
+  display: flex;
+  gap: 12px;
+}
+.rleg { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--muted); }
+.rleg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── Badge ─────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+.badge.winner { background: color-mix(in srgb, var(--gold) 18%, transparent); color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent); }
+.badge.star   { background: color-mix(in srgb, var(--green) 15%, transparent); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+.badge.warn   { background: color-mix(in srgb, var(--red) 12%, transparent); color: var(--red); border: 1px solid color-mix(in srgb, var(--red) 30%, transparent); }
+
+/* ─── Bayesian patterns ─────────────────────────────────────── */
+.bayes-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+.bayes-card {
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  padding: 7px 8px;
+  background: var(--bg);
+}
+.bc-type {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.bc-type.def  { color: var(--red); }
+.bc-type.bord { color: var(--gold); }
+.bc-type.conf { color: var(--green); }
+.bc-ci {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+}
+.bc-desc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* ─── Pipeline flowchart ────────────────────────────────────── */
+.pipeline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 8px 0 4px;
+  justify-content: center;
+}
+.pipe-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 80px;
+}
+.pipe-box {
+  background: var(--navy);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 5px 6px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.3;
+  width: 100%;
+  max-width: 90px;
+}
+.pipe-box.active { background: var(--teal); }
+.pipe-box.highlight { background: var(--gold); color: #1a1a1a; }
+.pipe-num {
+  font-size: 9px;
+  color: var(--label);
+  font-family: var(--ff-mono);
+}
+.pipe-arrow {
+  color: var(--border);
+  font-size: 14px;
+  padding: 0 2px;
+  align-self: center;
+  margin-top: -10px;
+}
+
+/* ─── Callout box ───────────────────────────────────────────── */
+.callout {
+  border-left: 3px solid var(--teal);
+  background: color-mix(in srgb, var(--teal) 6%, var(--panel));
+  padding: 7px 10px;
+  border-radius: 0 4px 4px 0;
+  margin: 6px 0;
+  font-size: 11px;
+}
+.callout.gold { border-left-color: var(--gold); background: color-mix(in srgb, var(--gold) 6%, var(--panel)); }
+.callout.green { border-left-color: var(--green); background: color-mix(in srgb, var(--green) 6%, var(--panel)); }
+.callout.red   { border-left-color: var(--red); background: color-mix(in srgb, var(--red) 6%, var(--panel)); }
+
+/* ─── Footer ────────────────────────────────────────────────── */
+.poster-footer {
+  background: var(--navy);
+  color: rgba(255,255,255,.6);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  border-top: 3px solid var(--teal);
+}
+.footer-left { display: flex; flex-direction: column; gap: 2px; }
+.footer-center { text-align: center; }
+.footer-qr {
+  background: rgba(255,255,255,.08);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 9px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.12);
+}
+.footer-right { text-align: right; display: flex; flex-direction: column; gap: 2px; }
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .poster-body { grid-template-columns: 1fr 1fr; }
+  .col-wide { grid-column: 1 / -1; }
+  .bayes-cards { grid-template-columns: 1fr; }
+  .flag-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .poster-body { grid-template-columns: 1fr; }
+  .poster-header { padding: 20px max(16px, env(safe-area-inset-left, 0px)) 16px; }
+  .poster-title { font-size: 15px; }
+  .header-stats { flex-wrap: wrap; }
+  .hstat { flex: 0 0 45%; border-right: none; margin-right: 0; }
+  .chip-row { }
+  .pipeline { }
+  .pipe-arrow { display: none; }
+}
+</style>
+
+<div class="poster">
+
+  <!-- ══════════════════ HEADER ══════════════════ -->
+  <header class="poster-header">
+    <div class="header-badge">Pilot Phase · Simulated KDHS Data · n = 1,000</div>
+    <h1 class="poster-title">
+      Predicting <em>Maternal Health Risk</em> Among Pregnant Women in Kenya<br>
+      Using Machine Learning &amp; Bayesian Inference on the KDHS 2022
+    </h1>
+    <div class="header-meta">
+      <div class="meta-block">
+        <div class="meta-label">Author</div>
+        <div class="meta-value">Selmah Tzindori Mise &nbsp;|&nbsp; ID: 669602</div>
+      </div>
+      <div class="meta-block">
+        <div class="meta-label">Programme</div>
+        <div class="meta-value">B.Sc. Data Science &amp; Analytics — USIU-Africa</div>
+      </div>
+      <div class="meta-block">
+        <div class="meta-label">Module</div>
+        <div class="meta-value">DSA 3900: Final Year Research Project</div>
+      </div>
+      <div class="meta-block">
+        <div class="meta-label">Supervisor</div>
+        <div class="meta-value">School of Science &amp; Technology</div>
+      </div>
+      <div class="meta-block">
+        <div class="meta-label">Date</div>
+        <div class="meta-value">October 2026</div>
+      </div>
+    </div>
+
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-num">90.0%</div>
+        <div class="hstat-label">Final Ensemble<br>Test Accuracy</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">0.9717</div>
+        <div class="hstat-label">Stacking Ensemble<br>AUC-ROC</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">87%</div>
+        <div class="hstat-label">High-Risk Recall<br>(Critical Class)</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">0</div>
+        <div class="hstat-label">High Risk → Low Risk<br>Misclassifications</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">1.003<sub style="font-size:12px">R̂</sub></div>
+        <div class="hstat-label">Bayesian MCMC<br>Convergence (R-hat)</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">8</div>
+        <div class="hstat-label">Pipeline Notebooks<br>Completed</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════ BODY ══════════════════ -->
+  <div class="poster-body">
+
+    <!-- ── COL 1 ── -->
+    <div class="col">
+
+      <!-- Introduction -->
+      <div class="section">
+        <div class="section-head">
+          <span class="section-icon">📋</span>
+          <span class="section-title">Background &amp; Problem Statement</span>
+        </div>
+        <div class="section-body">
+          <p>Kenya's maternal mortality ratio stands at <strong>355 per 100,000 live births</strong> — five times the SDG 3.1 target — with the majority of preventable deaths concentrated among women who were never screened for risk factors during antenatal care.</p>
+          <p>Existing tools either operate at the population or county level, or are confined to hospital systems. No individual-level, Bayesian-augmented ML tool exists for use by Community Health Workers (CHWs) in Kenya using nationally representative KDHS data.</p>
+          <div class="callout">
+            <strong>Research Gap:</strong> CHWs lack a data-driven, probabilistic triage tool calibrated to Kenyan demographic and geographic risk factors.
+          </div>
+          <p><strong>Dataset:</strong> Kenya Demographic &amp; Health Survey 2022 Individual Recode (KDHS 2022-IR). After filtering for women with a recent birth: <strong>10,391 records × 13 variables</strong>. Pilot testing uses 1,000 simulated records mirroring these distributions.</p>
+        </div>
+      </div>
+
+      <!-- Objectives -->
+      <div class="section">
+        <div class="section-head teal">
+          <span class="section-icon">🎯</span>
+          <span class="section-title">Research Objectives</span>
+        </div>
+        <div class="section-body">
+          <ol>
+            <li><strong>SO1 — ML Classification:</strong> Develop a TabNet / TabTransformer classification model to stratify pregnant women into Low, Moderate, and High risk categories using KDHS 2022 variables.</li>
+            <li><strong>SO2 — Bayesian Inference:</strong> Apply PyMC-based Bayesian inference to quantify prediction uncertainty and produce 95% highest-density credible intervals per patient.</li>
+            <li><strong>SO3 — AI-Integrated App:</strong> Deploy a bilingual (English / Kiswahili) Streamlit application with AI-generated clinical explanations for CHW use.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Variables -->
+      <div class="section">
+        <div class="section-head">
+          <span class="section-icon">📊</span>
+          <span class="section-title">Key Variables (KDHS 2022)</span>
+        </div>
+        <div class="section-body">
+          <table class="rtable">
+            <thead>
+              <tr><th>Variable</th><th>Description</th><th>Risk Flag</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>v012</code></td><td>Mother's age</td><td>&lt;18 or &gt;35</td></tr>
+              <tr><td><code>v201</code></td><td>Total children ever born</td><td>&gt;4</td></tr>
+              <tr><td><code>m14_1</code></td><td>ANC visits</td><td>&lt;4</td></tr>
+              <tr><td><code>m15_1</code></td><td>Delivery location</td><td>Non-facility</td></tr>
+              <tr><td><code>m17_1</code></td><td>C-section delivery</td><td>Yes</td></tr>
+              <tr><td><code>b11_01</code></td><td>Birth interval</td><td>&lt;24 months</td></tr>
+              <tr><td><code>v190</code></td><td>Wealth index</td><td>Quintile 1–2</td></tr>
+              <tr><td><code>v212</code></td><td>Age at first birth</td><td>&lt;18</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:7px; font-size:10px; color:var(--muted);">+ Province (v024), Residence (v025), Education (v106), Marital status (v501)</p>
+        </div>
+      </div>
+
+      <!-- Risk engineering -->
+      <div class="section">
+        <div class="section-head gold">
+          <span class="section-icon">⚙️</span>
+          <span class="section-title">Target Variable Engineering</span>
+        </div>
+        <div class="section-body">
+          <p>Eight WHO-based binary risk flags are summed to a composite score. Thresholds calibrated from pilot distributions:</p>
+          <div class="risk-bar">
+            <div class="risk-seg low" style="width:24.6%">24.6%</div>
+            <div class="risk-seg mod" style="width:60.3%">60.3%</div>
+            <div class="risk-seg hi" style="width:15.1%">15.1%</div>
+          </div>
+          <div class="risk-legend">
+            <div class="rleg"><div class="rleg-dot" style="background:var(--green)"></div>Low (0–1 flags)</div>
+            <div class="rleg"><div class="rleg-dot" style="background:var(--gold)"></div>Moderate (2–3)</div>
+            <div class="rleg"><div class="rleg-dot" style="background:var(--red)"></div>High (4+ flags)</div>
+          </div>
+          <div class="flag-grid" style="margin-top:10px;">
+            <div class="flag-item"><div class="flag-name">ANC &lt; 4 visits</div><div class="flag-bar-wrap"><div class="flag-bar hi" style="width:62%"></div></div></div>
+            <div class="flag-item"><div class="flag-name">Age &lt;18 / &gt;35</div><div class="flag-bar-wrap"><div class="flag-bar" style="width:21%"></div></div></div>
+            <div class="flag-item"><div class="flag-name">Non-facility birth</div><div class="flag-bar-wrap"><div class="flag-bar hi" style="width:54%"></div></div></div>
+            <div class="flag-item"><div class="flag-name">Short birth interval</div><div class="flag-bar-wrap"><div class="flag-bar" style="width:38%"></div></div></div>
+            <div class="flag-item"><div class="flag-name">Wealth quintile 1–2</div><div class="flag-bar-wrap"><div class="flag-bar" style="width:46%"></div></div></div>
+            <div class="flag-item"><div class="flag-name">Grand multiparity</div><div class="flag-bar-wrap"><div class="flag-bar" style="width:18%"></div></div></div>
+          </div>
+          <p style="margin-top:8px; font-size:10px; color:var(--muted);">SMOTE applied on training split only: 700 → 1,269 balanced records.</p>
+        </div>
+      </div>
+
+    </div><!-- /col 1 -->
+
+    <!-- ── COL 2 ── -->
+    <div class="col">
+
+      <!-- Pipeline -->
+      <div class="section">
+        <div class="section-head">
+          <span class="section-icon">🔄</span>
+          <span class="section-title">Pilot Test Pipeline (8 Notebooks)</span>
+        </div>
+        <div class="section-body">
+          <div class="pipeline">
+            <div class="pipe-step"><div class="pipe-num">NB-00</div><div class="pipe-box">Data Simulation</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-01</div><div class="pipe-box active">Preprocessing &amp; Target Eng.</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-02</div><div class="pipe-box">Baseline Models</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-03</div><div class="pipe-box active">Advanced Models</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-04</div><div class="pipe-box">Novel Models</div></div>
+          </div>
+          <div class="pipeline" style="margin-top:4px; justify-content:flex-end;">
+            <div class="pipe-step"><div class="pipe-num">NB-05</div><div class="pipe-box highlight">Stacking Ensemble</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-06</div><div class="pipe-box active">Bayesian Inference</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-07</div><div class="pipe-box active">SHAP Explainability</div></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><div class="pipe-num">NB-08</div><div class="pipe-box highlight">Streamlit App</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Baseline -->
+      <div class="section">
+        <div class="section-head">
+          <span class="section-icon">📐</span>
+          <span class="section-title">NB-02 · Tier 1 Baseline Models</span>
+        </div>
+        <div class="section-body">
+          <table class="rtable">
+            <thead>
+              <tr><th>Model</th><th>Acc.</th><th>AUC-ROC</th><th>H-Recall</th><th>F1</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Logistic Regression</td>
+                <td class="num ok">0.660</td>
+                <td class="num ok">0.8599</td>
+                <td class="num warn">0.783</td>
+                <td class="num ok">0.651</td>
+              </tr>
+              <tr>
+                <td>Decision Tree</td>
+                <td class="num lo">0.640</td>
+                <td class="num lo">0.8472</td>
+                <td class="num ok">0.739</td>
+                <td class="num lo">0.646</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout" style="margin-top:7px;">
+            <strong>Benchmarks set:</strong> AUC-ROC &gt; 0.860 · High Recall &gt; 0.783
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced -->
+      <div class="section">
+        <div class="section-head teal">
+          <span class="section-icon">⚡</span>
+          <span class="section-title">NB-03 · Tier 2 Advanced Models</span>
+        </div>
+        <div class="section-body">
+          <table class="rtable">
+            <thead>
+              <tr><th>Model</th><th>Acc.</th><th>AUC-ROC</th><th>H-Recall</th><th>F1</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Random Forest</td>
+                <td class="num ok">0.833</td>
+                <td class="num ok">0.944</td>
+                <td class="num lo">0.609</td>
+                <td class="num ok">0.791</td>
+              </tr>
+              <tr>
+                <td>XGBoost</td>
+                <td class="num hi">0.860</td>
+                <td class="num hi">0.964</td>
+                <td class="num lo">0.609</td>
+                <td class="num hi">0.817</td>
+              </tr>
+              <tr class="champion">
+                <td><strong>CatBoost</strong> <span class="badge winner">✦ Champion</span></td>
+                <td class="num ok">0.847</td>
+                <td class="num top">0.969</td>
+                <td class="num top">0.826</td>
+                <td class="num hi">0.827</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size:10px; color:var(--muted); margin-top:6px;">CatBoost selected as Tier 2 champion — only model exceeding baseline High Recall benchmark (0.783).</p>
+        </div>
+      </div>
+
+      <!-- Novel -->
+      <div class="section">
+        <div class="section-head gold">
+          <span class="section-icon">🧠</span>
+          <span class="section-title">NB-04 · Novel Deep Learning Models</span>
+        </div>
+        <div class="section-body">
+          <table class="rtable">
+            <thead>
+              <tr><th>Model</th><th>Acc.</th><th>AUC-ROC</th><th>H-Recall</th><th>F1</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TabNet</td>
+                <td class="num lo">0.687</td>
+                <td class="num lo">0.819</td>
+                <td class="num lo">0.522</td>
+                <td class="num lo">0.640</td>
+              </tr>
+              <tr class="best">
+                <td><strong>TabTransformer</strong> <span class="badge star">↑ H-Recall</span></td>
+                <td class="num lo">0.580</td>
+                <td class="num lo">0.720</td>
+                <td class="num top">0.870</td>
+                <td class="num lo">0.570</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout gold" style="margin-top:7px;">
+            TabTransformer achieves the <strong>highest High Recall (0.870)</strong> of all individual models. Custom PyTorch implementation used due to library incompatibility (x-transformers &gt;1.x). Early-stopped at epoch 54 (TabNet).
+          </div>
+        </div>
+      </div>
+
+      <!-- Meta-learner comparison -->
+      <div class="section">
+        <div class="section-head">
+          <span class="section-icon">🔬</span>
+          <span class="section-title">NB-05 · Meta-Learner Selection</span>
+        </div>
+        <div class="section-body">
+          <p style="font-size:11px; margin-bottom:6px;">Base models: CatBoost + XGBoost + TabTransformer → 9 meta-features per woman (3 models × 3 class probabilities)</p>
+          <table class="rtable">
+            <thead>
+              <tr><th>Meta-Learner</th><th>Acc.</th><th>AUC-ROC</th><th>H-Recall</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Standard LR</td>
+                <td class="num ok">0.853</td>
+                <td class="num hi">0.964</td>
+                <td class="num lo">0.609</td>
+              </tr>
+              <tr class="champion">
+                <td><strong>Weighted LR (3× High)</strong> <span class="badge winner">Selected</span></td>
+                <td class="num ok">0.853</td>
+                <td class="num hi">0.964</td>
+                <td class="num warn">0.652</td>
+              </tr>
+              <tr>
+                <td>Weighted + Boosted TT</td>
+                <td class="num ok">0.853</td>
+                <td class="num hi">0.964</td>
+                <td class="num warn">0.652</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size:10px; color:var(--muted); margin-top:5px;">Weighted LR selected: same performance as boosted variant, simpler to calibrate on real data.</p>
+        </div>
+      </div>
+
+    </div><!-- /col 2 -->
+
+    <!-- ── COL 3 ── -->
+    <div class="col">
+
+      <!-- Final test results -->
+      <div class="section">
+        <div class="section-head green">
+          <span class="section-icon">🏆</span>
+          <span class="section-title">Final Stacking Ensemble — Test Set Results</span>
+        </div>
+        <div class="section-body">
+          <div class="chip-row">
+            <div class="chip green-chip">
+              <span class="chip-val">90.0%</span>
+              <span class="chip-label">Accuracy</span>
+            </div>
+            <div class="chip green-chip">
+              <span class="chip-val">0.972</span>
+              <span class="chip-label">AUC-ROC</span>
+            </div>
+            <div class="chip gold-chip">
+              <span class="chip-val">87%</span>
+              <span class="chip-label">High Recall</span>
+            </div>
+            <div class="chip gold-chip">
+              <span class="chip-val">88%</span>
+              <span class="chip-label">Macro F1</span>
+            </div>
+          </div>
+          <table class="rtable" style="margin-top:10px;">
+            <thead>
+              <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>n</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="color:var(--green);">●</span> Low Risk</td>
+                <td class="num hi">0.97</td>
+                <td class="num ok">0.89</td>
+                <td class="num hi">0.93</td>
+                <td class="num lo">37</td>
+              </tr>
+              <tr>
+                <td><span style="color:var(--gold);">●</span> Moderate Risk</td>
+                <td class="num hi">0.92</td>
+                <td class="num hi">0.91</td>
+                <td class="num hi">0.92</td>
+                <td class="num lo">90</td>
+              </tr>
+              <tr class="best">
+                <td><span style="color:var(--red);">●</span> <strong>High Risk</strong></td>
+                <td class="num ok">0.74</td>
+                <td class="num top">0.87</td>
+                <td class="num ok">0.80</td>
+                <td class="num lo">23</td>
+              </tr>
+              <tr>
+                <td><strong>Macro Avg</strong></td>
+                <td class="num hi">0.88</td>
+                <td class="num hi">0.89</td>
+                <td class="num hi">0.88</td>
+                <td class="num lo">150</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout green" style="margin-top:8px;">
+            <strong>Zero High Risk → Low Risk misclassifications.</strong> The most dangerous triage error does not occur on the test set.
+          </div>
+        </div>
+      </div>
+
+      <!-- Bayesian -->
+      <div class="section">
+        <div class="section-head teal">
+          <span class="section-icon">📈</span>
+          <span class="section-title">NB-06 · Bayesian Inference (PyMC NUTS)</span>
+        </div>
+        <div class="section-body">
+          <div class="kv-grid" style="margin-bottom:8px;">
+            <div class="kv"><div class="kv-k">Sampler</div><div class="kv-v">NUTS (MCMC)</div></div>
+            <div class="kv"><div class="kv-k">Chains</div><div class="kv-v">2</div></div>
+            <div class="kv"><div class="kv-k">Tuning draws</div><div class="kv-v">1,000</div></div>
+            <div class="kv"><div class="kv-k">Posterior draws</div><div class="kv-v">1,000</div></div>
+            <div class="kv"><div class="kv-k">R-hat</div><div class="kv-v" style="color:var(--green);">1.003 ✓</div></div>
+            <div class="kv"><div class="kv-k">ESS</div><div class="kv-v" style="color:var(--green);">3,477 ✓</div></div>
+          </div>
+          <p style="font-size:11px; margin-bottom:6px;">Output: posterior mean + 95% Highest Density Interval (HDI) per woman. Three clinical interpretability patterns observed:</p>
+          <div class="bayes-cards">
+            <div class="bayes-card">
+              <div class="bc-type def">Definitive</div>
+              <div class="bc-ci">P(High) = [0.97–1.00]</div>
+              <div class="bc-desc">Immediate referral indicated</div>
+            </div>
+            <div class="bayes-card">
+              <div class="bc-type bord">Borderline</div>
+              <div class="bc-ci">P(High) = [0.30–0.86]</div>
+              <div class="bc-desc">Clinical review recommended</div>
+            </div>
+            <div class="bayes-card">
+              <div class="bc-type conf">Confident Low</div>
+              <div class="bc-ci">P(High) = [0.00–0.01]</div>
+              <div class="bc-desc">Standard monitoring</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHAP -->
+      <div class="section">
+        <div class="section-head">
+          <span class="section-icon">🔍</span>
+          <span class="section-title">NB-07 · SHAP Explainability (CatBoost)</span>
+        </div>
+        <div class="section-body">
+          <p style="font-size:11px; margin-bottom:8px;">TreeSHAP global feature importance (Mean |SHAP|) — all explanations clinically coherent with WHO evidence:</p>
+
+          <div class="shap-row">
+            <div class="shap-var">v190</div>
+            <div class="shap-bar-wrap"><div class="shap-bar" style="width:100%"></div></div>
+            <div class="shap-num">1.205</div>
+            <div class="shap-meaning">Wealth index</div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-var">m14_1</div>
+            <div class="shap-bar-wrap"><div class="shap-bar" style="width:90%"></div></div>
+            <div class="shap-num">1.086</div>
+            <div class="shap-meaning">ANC visits</div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-var">m15_1</div>
+            <div class="shap-bar-wrap"><div class="shap-bar" style="width:75%"></div></div>
+            <div class="shap-num">0.905</div>
+            <div class="shap-meaning">Delivery location</div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-var">v012</div>
+            <div class="shap-bar-wrap"><div class="shap-bar" style="width:65%"></div></div>
+            <div class="shap-num">0.788</div>
+            <div class="shap-meaning">Mother's age</div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-var">b11_01</div>
+            <div class="shap-bar-wrap"><div class="shap-bar" style="width:60%"></div></div>
+            <div class="shap-num">0.724</div>
+            <div class="shap-meaning">Birth interval</div>
+          </div>
+          <div class="shap-row">
+            <div class="shap-var">v201</div>
+            <div class="shap-bar-wrap"><div class="shap-bar" style="width:45%"></div></div>
+            <div class="shap-num">0.538</div>
+            <div class="shap-meaning">Parity (children born)</div>
+          </div>
+          <div class="callout" style="margin-top:8px;">
+            Poverty (v190) and ANC attendance (m14_1) are the strongest predictors — consistent with WHO evidence on socioeconomic determinants of maternal mortality.
+          </div>
+        </div>
+      </div>
+
+      <!-- App -->
+      <div class="section">
+        <div class="section-head gold">
+          <span class="section-icon">📱</span>
+          <span class="section-title">SO3 · Streamlit CHW App (Pilot)</span>
+        </div>
+        <div class="section-body">
+          <ul>
+            <li>13-variable input form (aligned to KDHS variables)</li>
+            <li>Stacking ensemble prediction with risk level &amp; probability</li>
+            <li>Bayesian posterior mean + 95% HDI displayed per prediction</li>
+            <li>AI-generated clinical explanation (2–3 sentences, plain language)</li>
+            <li>Three WHO-aligned CHW recommendations per risk tier</li>
+            <li>Automatic referral letter generation for High Risk cases</li>
+            <li><strong>English / Kiswahili toggle</strong> for CHW accessibility</li>
+          </ul>
+          <div class="callout gold" style="margin-top:7px; font-size:10px;">
+            AI API cost: ~$0.003 per prediction request. Free credits available for pilot validation. App run: <code>streamlit run 08_Pilot_App.py</code>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /col 3 -->
+
+    <!-- ══════════════ WIDE ROW — Conclusions & Next Steps ══════════════ -->
+    <div class="col-wide" style="background:var(--bg); display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
+
+      <!-- Key Findings -->
+      <div class="section">
+        <div class="section-head green">
+          <span class="section-icon">✅</span>
+          <span class="section-title">Key Pilot Findings</span>
+        </div>
+        <div class="section-body">
+          <ul>
+            <li>The stacking ensemble (CatBoost + XGBoost + TabTransformer) outperforms all individual models on AUC-ROC <strong>(0.9717)</strong> and macro F1 <strong>(0.88)</strong></li>
+            <li>TabTransformer, despite lower overall accuracy, captures high-risk women that tree-based models miss (Recall = <strong>0.870</strong>), validating its role in the ensemble</li>
+            <li>Bayesian MCMC achieves excellent convergence (<strong>R-hat = 1.003</strong>, ESS = 3,477), enabling reliable uncertainty quantification for CHW decision support</li>
+            <li>Poverty (wealth index) and inadequate ANC are the dominant predictors, consistent with global maternal health evidence</li>
+            <li>Zero catastrophic misclassifications (High Risk predicted as Low Risk) on the test set — a critical safety property for triage tools</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Limitations -->
+      <div class="section">
+        <div class="section-head red">
+          <span class="section-icon">⚠️</span>
+          <span class="section-title">Limitations &amp; Ethical Considerations</span>
+        </div>
+        <div class="section-body">
+          <ul>
+            <li><strong>Simulated data:</strong> Pilot uses 1,000 synthetic records; generalisability to real KDHS (n=10,391) requires validation</li>
+            <li><strong>Self-reported data:</strong> KDHS responses subject to recall bias (e.g., ANC visit counts, delivery location)</li>
+            <li><strong>Class imbalance:</strong> High Risk class (15%) — SMOTE mitigates but does not eliminate imbalance effects</li>
+            <li><strong>Ethics:</strong> USIU-Africa IRB + NACOSTI approval pending; KDHS data use agreement signed; all data fully anonymised</li>
+            <li><strong>CHW literacy:</strong> Interface validated against simulated users only; real CHW usability testing planned</li>
+            <li><strong>Missing variables:</strong> v457 and v481 empty in KDHS 2022-IR release</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Next Steps -->
+      <div class="section">
+        <div class="section-head teal">
+          <span class="section-icon">🚀</span>
+          <span class="section-title">Implementation Phase — Next Steps</span>
+        </div>
+        <div class="section-body">
+          <ol>
+            <li>Load real KDHS 2022 dataset (<strong>10,391 women</strong>) and retrain full pipeline</li>
+            <li>Optuna hyperparameter tuning — 100 trials per model (CatBoost, XGBoost, TabTransformer)</li>
+            <li>Calibrate risk thresholds on real population distributions</li>
+            <li>Bayesian inference on full dataset with geographic stratification by province (v024)</li>
+            <li>Deploy Streamlit app on <strong>Streamlit Community Cloud</strong></li>
+            <li>Clinical validation with 5+ CHW participants (semi-structured interviews)</li>
+            <li>Final dissertation written and defended — <strong>USIU-Africa, 2027</strong></li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- /wide row -->
+
+  </div><!-- /poster-body -->
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer class="poster-footer">
+    <div class="footer-left">
+      <span><strong style="color:rgba(255,255,255,.85);">Selmah Tzindori Mise</strong> · tzindori@gmail.com</span>
+      <span>B.Sc. Data Science &amp; Analytics · USIU-Africa · ID 669602</span>
+      <span>github.com/SelmahT/maternal-health-risk-kenya</span>
+    </div>
+    <div class="footer-center">
+      <div style="color:rgba(255,255,255,.85); font-size:11px; font-weight:600; margin-bottom:4px;">Data Sources &amp; Tools</div>
+      <div style="font-size:9px; line-height:1.6;">
+        Kenya DHS 2022-IR · DHS Program (dhsprogram.com) · Python 3.11<br>
+        CatBoost · XGBoost · PyTorch · PyMC · SHAP · Streamlit · Anthropic AI API
+      </div>
+    </div>
+    <div class="footer-right">
+      <div class="footer-qr">
+        <div style="font-size:9px; color:rgba(255,255,255,.5); margin-bottom:2px;">GitHub Repository</div>
+        <div style="color:rgba(255,255,255,.8); font-weight:600; font-size:10px;">github.com/SelmahT/<br>maternal-health-risk-kenya</div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /poster -->
+
+</body></html>
