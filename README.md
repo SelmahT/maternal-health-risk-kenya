@@ -33,24 +33,21 @@ pregnant women daily with no data-driven risk tool. This project builds one.
 
 ---
 
-## 🗂️ Project Structure
+## 🗂️ Repository Structure
 
+```text
 DSA3900_MaternalHealthRisk/
 │
 ├── 01_Data/
-│   ├── raw/                              ← KDHS 2022 files (not in repo — see DATA_README)
-│   └── processed/                        ← Implementation-phase datasets
-│       ├── 00_kdhs_clean.csv             ← 10,391 women × 24 cols (features + flags + target)
-│       ├── X_train.csv                   ← SMOTE-balanced training features
-│       ├── X_val.csv                     ← Validation features
-│       ├── X_test.csv                    ← Held-out test features
-│       ├── y_train.csv                   ← Training labels
-│       ├── y_val.csv                     ← Validation labels
-│       └── y_test.csv                    ← Test labels
+│   ├── raw/                               ← KDHS 2022 files (not in repo)
+│   └── processed/
+│       ├── 00_kdhs_clean.csv              ← 10,391 women × 24 cols
+│       ├── X_train.csv / X_val.csv / X_test.csv
+│       └── y_train.csv / y_val.csv / y_test.csv
 │
-├── 02_Notebooks/                         ← Implementation notebooks (real KDHS data)
+├── 02_Notebooks/                          ← Implementation notebooks (real KDHS data)
 │   ├── EDA/
-│   │   └── 00_DataLoading_EDA.ipynb      ← Real data exploration ✅
+│   │   └── 00_DataLoading_EDA.ipynb       ✅
 │   ├── Preprocessing/
 │   │   └── 01_Preprocessing.ipynb
 │   ├── Models/
@@ -63,41 +60,29 @@ DSA3900_MaternalHealthRisk/
 │   └── SHAP/
 │       └── 07_SHAP_Explainability.ipynb
 │
-├── 03_Models_Saved/                      ← Implementation model artefacts (populated after training)
-│   ├── scaler.pkl
-│   ├── lr_model.pkl
-│   ├── dt_model.pkl
-│   ├── rf_model.pkl
-│   ├── xgb_model.pkl
-│   ├── cat_model.pkl
-│   ├── tabnet_model.zip
-│   ├── tabtransformer_best.pt
-│   └── stacking_meta_learner_weighted.pkl
+├── 03_Models_Saved/                       ← Implementation models (populated after training)
 │
 ├── 04_Outputs/
-│   ├── figures/                          ← Saved plots and charts
-│   ├── results/                          ← Metrics tables and CSVs
-│   └── reports/                          ← Final write-ups
+│   ├── figures/
+│   ├── results/
+│   └── reports/
 │
-├── 05_App/                               ← Streamlit application (deployment)
+├── 05_App/
 │   └── app.py
 │
-├── 06_Documentation/                     ← Proposal, pilot report, presentations
+├── 06_Documentation/
 │   ├── proposal_documentation/
 │   ├── presentation/
 │   └── reports/
 │
-└── 07_Pilot_Test/                        ← ✅ COMPLETE — Pilot on 1,000 simulated records
+└── 07_Pilot_Test/                         ← ✅ COMPLETE — Pilot on 1,000 simulated records
     ├── pilot_data/
-    │   ├── raw/
-    │   │   └── simulated_kdhs_1000.csv   ← 1,000 synthetic records (KDHS-mirroring)
+    │   ├── raw/simulated_kdhs_1000.csv
     │   └── processed/
-    │       ├── X_train.csv               ← SMOTE-balanced training features (1,269 × 13)
-    │       ├── X_val.csv                 ← Validation features (150 × 13)
-    │       ├── X_test.csv                ← Held-out test features (150 × 13)
-    │       ├── y_train.csv
-    │       ├── y_val.csv
-    │       ├── y_test.csv
+    │       ├── X_train.csv (1,269 × 13)
+    │       ├── X_val.csv (150 × 13)
+    │       ├── X_test.csv (150 × 13)
+    │       ├── y_train / y_val / y_test.csv
     │       └── pilot_full_processed.csv
     ├── notebooks/
     │   ├── 00_Pilot_DataSimulation.ipynb
@@ -108,36 +93,11 @@ DSA3900_MaternalHealthRisk/
     │   ├── 05_Pilot_StackingEnsemble.ipynb
     │   ├── 06_Pilot_Bayesian.ipynb
     │   └── 07_Pilot_SHAP.ipynb
-    ├── Models_Saved/                     ← Pilot model artefacts
-    │   ├── scaler.pkl
-    │   ├── lr_model.pkl
-    │   ├── dt_model.pkl
-    │   ├── rf_model.pkl
-    │   ├── xgb_model.pkl
-    │   ├── cat_model.pkl
-    │   ├── tabnet_model.zip
-    │   ├── tabtransformer_best.pt
-    │   └── stacking_meta_learner_weighted.pkl
+    ├── Models_Saved/                      ← Pilot model artefacts (local only)
     ├── results/
-    │   ├── 01_variable_distributions.png
-    │   ├── 02_flag_contributions.png
-    │   ├── 03_baseline_comparison.png
-    │   ├── 04_all_models_comparison.png
-    │   ├── 05_final_leaderboard.png
-    │   ├── 06_shap_global_importance.png
-    │   ├── 07_shap_summary.png
-    │   ├── 08_shap_waterfall.png
-    │   ├── bayesian_posteriors.png
-    │   ├── bayesian_trace.png
-    │   ├── bayesian_predictions.csv
-    │   ├── baseline_results.csv
-    │   ├── all_results_so_far.csv
-    │   ├── final_all_results.csv
-    │   ├── meta_learner_comparison.png
-    │   ├── shap_values_high_risk.csv
-    │   └── cm_*.png                      ← Confusion matrices (all models)
     └── app_test/
-        └── 08_Pilot_App.py               ← Working Streamlit prototype
+        └── 08_Pilot_App.py
+```
 
 ---
 
