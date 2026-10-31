@@ -1,0 +1,8 @@
+Model,Accuracy,Macro F1,High-Risk F1,ROC-AUC
+XGBoost,0.9994,0.9992,0.9985,1.0
+CatBoost,0.9987,0.9984,0.997,1.0
+Random Forest,0.9968,0.9963,0.994,1.0
+TabTransformer,0.9962,0.9958,0.994,0.9997
+TabNet,0.9897,0.9884,0.9821,0.9997
+Decision Tree,0.9423,0.9387,0.9292,0.9862
+Logistic Regression,0.8114,0.8124,0.8314,0.9414
