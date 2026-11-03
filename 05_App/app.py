@@ -481,6 +481,13 @@ for key, default in [("role", None), ("researcher_agreed", False),
     if key not in st.session_state:
         st.session_state[key] = default
 
+# Pre-fill Gemini key from Streamlit Cloud secrets if available
+if not st.session_state["gemini_key"]:
+    try:
+        st.session_state["gemini_key"] = st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        pass
+
 lang = st.session_state["lang"]
 tr   = T[lang]
 
