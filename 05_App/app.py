@@ -115,8 +115,8 @@ T = {
                        "No patient data is stored or transmitted."),
         "clinician": "Clinician", "researcher": "Researcher",
         "role_q": "Who are you?",
-        "clinician_desc": "Enter patient indicators and receive a risk prediction with AI explanation.",
-        "researcher_desc": "Explore model performance, SHAP explanations, and Bayesian uncertainty.",
+        "clinician_desc": "Access risk assessment, AI clinical summaries, and referral letter generation. Model insights are restricted.",
+        "researcher_desc": "Full access — risk assessment plus model performance, global SHAP analysis, and Bayesian uncertainty (requires data use agreement).",
         "enter_clinician": "Enter as Clinician", "enter_researcher": "Enter as Researcher",
         "switch_role": "🔄 Switch Role",
         "assess_title": "# 📋 Risk Assessment",
@@ -154,8 +154,8 @@ T = {
                        "Hakuna data ya mgonjwa inayohifadhiwa au kutumwa."),
         "clinician": "Kliniki", "researcher": "Mtafiti",
         "role_q": "Wewe ni nani?",
-        "clinician_desc": "Ingiza viashiria vya mgonjwa na upate utabiri wa hatari na maelezo ya AI.",
-        "researcher_desc": "Chunguza utendaji wa mfano, maelezo ya SHAP, na uchambuzi wa Bayesian.",
+        "clinician_desc": "Pata tathmini ya hatari, muhtasari wa AI, na barua ya rufaa. Maarifa ya mfano yamezuiliwa.",
+        "researcher_desc": "Ufikiaji kamili — tathmini ya hatari pamoja na utendaji wa mfano, SHAP, na uchambuzi wa Bayesian (inahitaji makubaliano).",
         "enter_clinician": "Ingia kama Kliniki", "enter_researcher": "Ingia kama Mtafiti",
         "switch_role": "🔄 Badilisha Jukumu",
         "assess_title": "# 📋 Tathmini ya Hatari ya Uzazi",
@@ -515,9 +515,15 @@ with st.sidebar:
     <hr/>
     """, unsafe_allow_html=True)
 
-    page = st.radio("Navigate",
-                    [tr["nav_home"], tr["nav_assess"], tr["nav_insights"], tr["nav_about"]],
-                    label_visibility="collapsed")
+    # Clinicians see Home, Risk Assessment, About only
+    # Researchers see all 4 pages including Model Insights
+    role = st.session_state.get("role")
+    if role == "researcher":
+        nav_options = [tr["nav_home"], tr["nav_assess"], tr["nav_insights"], tr["nav_about"]]
+    else:
+        nav_options = [tr["nav_home"], tr["nav_assess"], tr["nav_about"]]
+
+    page = st.radio("Navigate", nav_options, label_visibility="collapsed")
 
     st.markdown("<hr/>", unsafe_allow_html=True)
 
@@ -792,6 +798,23 @@ elif page in (T["en"]["nav_assess"], T["sw"]["nav_assess"]):
 # PAGE 3 — MODEL INSIGHTS
 # ─────────────────────────────────────────────
 elif page in (T["en"]["nav_insights"], T["sw"]["nav_insights"]):
+
+    # Block clinicians entirely
+    if st.session_state.role == "clinician":
+        st.markdown("## 🔒 Restricted Access")
+        st.markdown("""
+        <div class='card'>
+            <p style='font-size:1rem;'>
+                Model Insights are available to <b>Researchers only</b>.<br/><br/>
+                This section contains technical model performance data, SHAP explainability
+                plots, and Bayesian uncertainty analysis intended for academic use.<br/><br/>
+                If you are a researcher, please <b>Switch Role</b> on the Home page.
+            </p>
+        </div>""", unsafe_allow_html=True)
+        if st.button("🏠 Go to Home"):
+            st.session_state.role = None
+            st.rerun()
+        st.stop()
 
     if st.session_state.role == "researcher" and not st.session_state.researcher_agreed:
         st.markdown("## 🔬 Researcher Access")
