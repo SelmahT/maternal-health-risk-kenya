@@ -217,10 +217,21 @@ FEAT_MAP_SW = {
 # ─────────────────────────────────────────────
 @st.cache_resource(show_spinner="Loading models…")
 def load_artifacts():
-    scaler    = joblib.load(MOUT / "scaler.pkl")
-    model     = joblib.load(MOUT / "xgb_model.pkl")
-    explainer = joblib.load(MOUT / "shap_explainer.pkl")
-    results   = pd.read_csv(ROUT / "all_model_results.csv")
+    scaler  = joblib.load(MOUT / "scaler.pkl")
+    model   = joblib.load(MOUT / "xgb_model.pkl")
+    results = pd.read_csv(ROUT / "all_model_results.csv")
+
+    # Regenerate SHAP explainer at runtime to avoid pickle version conflicts
+    dummy = pd.DataFrame([
+        [28, 3, 2, 3, 2, 1, 20, 1, 4, 2, 0, 1, 24],
+        [22, 1, 1, 1, 2, 1, 18, 3, 2, 1, 0, 0, 14],
+        [35, 6, 0, 1, 2, 1, 17, 5, 1, 1, 0, 0, 10],
+    ], columns=FEATURE_CODES, dtype=float)
+    dummy_out = dummy.copy()
+    dummy_out[NUMERIC_FEATURES] = scaler.transform(dummy[NUMERIC_FEATURES])
+    explainer = shap.TreeExplainer(model)
+    explainer(dummy_out.values)  # warm-up
+
     return scaler, model, explainer, results
 
 # ─────────────────────────────────────────────
