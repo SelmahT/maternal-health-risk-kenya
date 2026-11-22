@@ -191,25 +191,25 @@ RISK_IDX  = {0: "risk_low", 1: "risk_mod", 2: "risk_high"}
 RISK_CSS  = {0: "risk-low", 1: "risk-mod",  2: "risk-high"}
 RISK_ICON = {0: "✅", 1: "⚠️", 2: "🔴"}
 
-FEATURE_CODES = ["v012","v201","v106","v190","v025","v501","v212","v024",
-                 "m14_1","m15_1","m17_1","m3a_1","b11_01"]
+# Corrected pipeline: 5 independent sociodemographic features only (no label leakage)
+FEATURE_CODES = ["v012","v106","v190","v501","v024"]
 
-# Only these 5 were passed through StandardScaler during training
-NUMERIC_FEATURES = ["v012","v201","m14_1","b11_01","v212"]
+# All 5 features were passed through StandardScaler during training
+NUMERIC_FEATURES = ["v012","v106","v190","v501","v024"]
 
 FEAT_MAP_EN = {
-    "v012":"Age of Woman","v201":"Total Children Born","v106":"Education Level",
-    "v190":"Wealth Index","v025":"Residence","v501":"Marital Status",
-    "v212":"Age at First Birth","v024":"Region","m14_1":"ANC Visits",
-    "m15_1":"Place of Delivery","m17_1":"Caesarean Section",
-    "m3a_1":"Doctor at Delivery","b11_01":"Birth Interval (months)",
+    "v012":"Age of Woman",
+    "v106":"Education Level",
+    "v190":"Wealth Index",
+    "v501":"Marital Status",
+    "v024":"Region",
 }
 FEAT_MAP_SW = {
-    "v012":"Umri wa Mwanamke","v201":"Jumla ya Watoto","v106":"Kiwango cha Elimu",
-    "v190":"Kiwango cha Utajiri","v025":"Makazi","v501":"Hali ya Ndoa",
-    "v212":"Umri wa Kuzaa Kwanza","v024":"Mkoa","m14_1":"Ziara za ANC",
-    "m15_1":"Mahali pa Kujifungua","m17_1":"Upasuaji wa Cesarean",
-    "m3a_1":"Daktari Wakati wa Kujifungua","b11_01":"Muda Kati ya Vizazi (miezi)",
+    "v012":"Umri wa Mwanamke",
+    "v106":"Kiwango cha Elimu",
+    "v190":"Kiwango cha Utajiri",
+    "v501":"Hali ya Ndoa",
+    "v024":"Mkoa",
 }
 
 # ─────────────────────────────────────────────
@@ -217,29 +217,27 @@ FEAT_MAP_SW = {
 # ─────────────────────────────────────────────
 @st.cache_resource(show_spinner="Loading models…")
 def load_artifacts():
-    scaler  = joblib.load(MOUT / "scaler.pkl")
-    model   = joblib.load(MOUT / "xgb_model.pkl")
-    results = pd.read_csv(ROUT / "all_model_results.csv")
+    scaler    = joblib.load(MOUT / "scaler.pkl")
+    xgb_model = joblib.load(MOUT / "xgb_model.pkl")
+    results   = pd.read_csv(ROUT / "all_model_results.csv")
 
-    # Regenerate SHAP explainer at runtime to avoid pickle version conflicts
     dummy = pd.DataFrame([
-        [28, 3, 2, 3, 2, 1, 20, 1, 4, 2, 0, 1, 24],
-        [22, 1, 1, 1, 2, 1, 18, 3, 2, 1, 0, 0, 14],
-        [35, 6, 0, 1, 2, 1, 17, 5, 1, 1, 0, 0, 10],
+        [28, 2, 3, 1, 1],
+        [22, 1, 1, 1, 3],
+        [35, 0, 1, 1, 5],
     ], columns=FEATURE_CODES, dtype=float)
     dummy_out = dummy.copy()
     dummy_out[NUMERIC_FEATURES] = scaler.transform(dummy[NUMERIC_FEATURES])
-    explainer = shap.TreeExplainer(model)
+    explainer = shap.TreeExplainer(xgb_model)
     explainer(dummy_out.values)  # warm-up
 
-    return scaler, model, explainer, results
+    return scaler, xgb_model, explainer, results
 
 # ─────────────────────────────────────────────
 # PREDICTION
 # ─────────────────────────────────────────────
 def predict(scaler, model, values: dict):
     df = pd.DataFrame([values], columns=FEATURE_CODES)
-    # Scale only the 5 numeric features — matches training pipeline
     df_out = df.copy().astype(float)
     df_out[NUMERIC_FEATURES] = scaler.transform(df[NUMERIC_FEATURES])
     df_s = df_out.values
@@ -636,7 +634,7 @@ if page in (T["en"]["nav_home"], T["sw"]["nav_home"]):
         col1, col2, col3 = st.columns(3)
         for col, val, lbl in [
             (col1, "9,054", "Training women (KDHS 2022)"),
-            (col2, "99.9%", "High-Risk Recall (XGBoost)"),
+            (col2, "0.81", "High-Risk F1 — Best Model (TabNet)"),
             (col3, "7",     "ML models benchmarked"),
         ]:
             with col:
@@ -660,20 +658,18 @@ if page in (T["en"]["nav_home"], T["sw"]["nav_home"]):
 # ─────────────────────────────────────────────
 elif page in (T["en"]["nav_assess"], T["sw"]["nav_assess"]):
 
-    scaler, model, explainer, _ = load_artifacts()
+    scaler, xgb_model, explainer, _ = load_artifacts()
     st.markdown(tr["assess_title"])
     st.markdown(f"<div class='disclaimer'>{tr['disclaimer']}</div>",
                 unsafe_allow_html=True)
 
     with st.form("risk_form"):
         st.markdown(tr["patient_indicators"])
+        st.markdown(tr["demographic"])
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown(tr["demographic"])
             v012  = st.number_input("Age / Umri (yrs)", 15, 49, 28)
-            v201  = st.number_input("Total Children / Jumla ya Watoto", 0, 15, 3)
-            v212  = st.number_input("Age at First Birth / Umri wa Kuzaa Kwanza", 10, 45, 20)
             v106  = st.selectbox("Education / Elimu", [0,1,2,3],
                                   format_func=lambda x: {0:"None/Hakuna",1:"Primary/Msingi",
                                                          2:"Secondary/Sekondari",3:"Higher/Zaidi"}[x])
@@ -681,8 +677,7 @@ elif page in (T["en"]["nav_assess"], T["sw"]["nav_assess"]):
                                   format_func=lambda x: {1:"Poorest/Maskini Sana",2:"Poorer/Maskini",
                                                          3:"Middle/Kati",4:"Richer/Tajiri",
                                                          5:"Richest/Tajiri Sana"}[x])
-            v025  = st.selectbox("Residence / Makazi", [1,2],
-                                  format_func=lambda x: {1:"Urban/Mjini",2:"Rural/Vijijini"}[x])
+        with col2:
             v501  = st.selectbox("Marital Status / Ndoa", [0,1,2,3,4,5],
                                   format_func=lambda x: {0:"Never/Hajaoa",1:"Married/Ameoa",
                                                          2:"Cohabiting/Pamoja",3:"Widowed/Mjane",
@@ -692,31 +687,13 @@ elif page in (T["en"]["nav_assess"], T["sw"]["nav_assess"]):
                                                          4:"Eastern/Mashariki",5:"Nyanza",
                                                          6:"Rift Valley",7:"Western/Magharibi",
                                                          8:"North Eastern/Kaskazini Mashariki"}[x])
-        with col2:
-            st.markdown(tr["clinical"])
-            m14_1 = st.number_input("ANC Visits / Ziara za ANC", 0, 20, 4)
-            m15_1 = st.selectbox("Delivery Place / Mahali pa Kujifungua", [1,2,3,4,5,6],
-                                  format_func=lambda x: {1:"Home/Nyumbani",
-                                                         2:"Gov't Hospital/Hospitali ya Serikali",
-                                                         3:"Gov't Health Centre/Kituo",
-                                                         4:"Gov't Post/Zahanati",
-                                                         5:"Private Hospital/Hospitali Binafsi",
-                                                         6:"Other/Nyingine"}[x])
-            m17_1 = st.selectbox("Caesarean / Upasuaji", [0,1],
-                                  format_func=lambda x: {0:"No/Hapana",1:"Yes/Ndiyo"}[x])
-            m3a_1 = st.selectbox("Doctor at Delivery / Daktari", [0,1],
-                                  format_func=lambda x: {0:"No/Hapana",1:"Yes/Ndiyo"}[x])
-            b11_01 = st.number_input("Birth Interval (months) / Muda (miezi)", 0, 120, 24)
 
         submitted = st.form_submit_button(tr["predict_btn"], use_container_width=True)
 
     if submitted:
-        values = {"v012":v012,"v201":v201,"v106":v106,"v190":v190,
-                  "v025":v025,"v501":v501,"v212":v212,"v024":v024,
-                  "m14_1":m14_1,"m15_1":m15_1,"m17_1":m17_1,
-                  "m3a_1":m3a_1,"b11_01":b11_01}
+        values = {"v012":v012,"v106":v106,"v190":v190,"v501":v501,"v024":v024}
 
-        pred, proba, df_s = predict(scaler, model, values)
+        pred, proba, df_s = predict(scaler, xgb_model, values)
         risk_key   = RISK_IDX[pred]
         risk_label = tr[risk_key]
         risk_css   = RISK_CSS[pred]
@@ -834,7 +811,7 @@ elif page in (T["en"]["nav_insights"], T["sw"]["nav_insights"]):
             st.session_state.researcher_agreed = True; st.rerun()
         st.stop()
 
-    scaler, model, explainer, results_df = load_artifacts()
+    scaler, xgb_model, explainer, results_df = load_artifacts()
     st.markdown("# 📊 Model Insights")
 
     tab1, tab2, tab3 = st.tabs(["🏆 Leaderboard", "🔍 Global SHAP", "📐 Bayesian Uncertainty"])
@@ -842,12 +819,12 @@ elif page in (T["en"]["nav_insights"], T["sw"]["nav_insights"]):
     with tab1:
         st.markdown("### Model Performance Leaderboard")
         data = {
-            "Model": ["XGBoost","CatBoost","Random Forest","TabTransformer",
-                      "TabNet","Decision Tree","Logistic Regression"],
-            "Accuracy": [0.9994,0.9987,0.9968,0.9962,0.9897,0.9423,0.8114],
-            "Macro F1": [0.9992,0.9985,0.9962,0.9958,0.9884,0.9388,0.8109],
-            "High-Risk F1": [0.9985,0.9970,0.9940,0.9940,0.9821,0.9292,0.8314],
-            "AUC": ["1.000","1.000","1.000","0.9997","0.9997","—","—"],
+            "Model": ["TabNet","XGBoost","CatBoost","TabTransformer",
+                      "Random Forest","Logistic Regression","Decision Tree"],
+            "High-Risk F1": [0.8100, 0.7823, 0.7778, 0.7723, 0.7622, 0.7486, 0.7428],
+            "ROC-AUC":      [0.8065, 0.8312, 0.8289, 0.7967, 0.8156, 0.8043, 0.7001],
+            "Macro F1":     [0.5600, 0.5921, 0.5889, 0.5166, 0.5712, 0.5234, 0.4821],
+            "Accuracy":     [0.6477, 0.6832, 0.6798, 0.5978, 0.6621, 0.6134, 0.5912],
         }
         df_lb = pd.DataFrame(data)
         st.dataframe(df_lb, use_container_width=True, hide_index=True)
@@ -855,10 +832,14 @@ elif page in (T["en"]["nav_insights"], T["sw"]["nav_insights"]):
         <div class='card' style='margin-top:14px;'>
             <h4 style='margin-top:0;'>Why XGBoost for deployment?</h4>
             <ul style='line-height:1.9; font-size:0.9rem;'>
-                <li><b>Performance:</b> Best High-Risk F1 (0.9985) and AUC (1.000)</li>
-                <li><b>Explainability:</b> Exact SHAP via TreeExplainer — no approximation</li>
-                <li><b>Speed:</b> Sub-millisecond inference — ideal for CHW real-time use</li>
-                <li><b>Uncertainty:</b> Bayesian HDI [0.9909, 0.9995] at 94% credibility</li>
+                <li><b>Performance:</b> High-Risk F1 = 0.782, Bayesian HDI [0.764, 0.800]</li>
+                <li><b>Explainability:</b> Exact SHAP via TreeExplainer — per-patient waterfall
+                    charts for clinical transparency</li>
+                <li><b>Reliability:</b> Single lightweight model; Stacking Ensemble requires
+                    all 7 base models at runtime including PyTorch, exceeding Streamlit Cloud
+                    memory limits</li>
+                <li><b>Note:</b> Stacking Ensemble achieves highest Bayesian F1 (0.791) and
+                    is recommended for future deployment in a higher-resource environment</li>
             </ul>
         </div>""", unsafe_allow_html=True)
 
@@ -876,10 +857,10 @@ elif page in (T["en"]["nav_insights"], T["sw"]["nav_insights"]):
                     st.info(f"Run Notebook 07 to generate {path.name}")
         st.markdown("""
         <div class='card'>
-            <b>Top finding:</b> Total Children Born, Wealth Index, and ANC Visits are the
-            three strongest predictors (Mean |SHAP| ≈ 3.97–3.98). High parity and low
-            wealth consistently elevate risk; ≥4 ANC visits and a skilled birth attendant
-            are strongly protective.
+            <b>Top finding:</b> Wealth Index (Mean |SHAP| = 0.707) is the strongest predictor,
+            followed by Age of Woman (0.371), Education Level (0.325), and Region (0.289).
+            Poor, older, less-educated women in underserved regions are most likely to be
+            flagged High-Risk — consistent with Kenya's known maternal mortality burden.
         </div>""", unsafe_allow_html=True)
 
     with tab3:
@@ -891,16 +872,18 @@ elif page in (T["en"]["nav_insights"], T["sw"]["nav_insights"]):
             st.info("Run Notebook 06 to generate bayesian_posterior_f1.png")
         st.dataframe(pd.DataFrame({
             "Model": ["XGBoost","TabTransformer","Stacking Ensemble"],
-            "Mean F1": [0.9955, 0.9911, 0.9955],
-            "HDI Lower (94%)": [0.9909, 0.9841, 0.9909],
-            "HDI Upper (94%)": [0.9995, 0.9969, 0.9995],
-            "R̂": ["1.00","1.00","1.00"], "ESS": [">1800",">1800",">1800"],
+            "Mean F1": [0.7815, 0.7713, 0.7908],
+            "HDI Lower (94%)": [0.7640, 0.7529, 0.7723],
+            "HDI Upper (94%)": [0.8001, 0.7903, 0.8088],
+            "R̂": ["1.00","1.00","1.00"], "ESS Bulk": [">4000",">4000",">4000"],
         }), use_container_width=True, hide_index=True)
         st.markdown("""
         <div class='card'>
-            All R̂ = 1.00 and ESS > 1800 confirm perfect MCMC convergence.
-            The 94% HDI for XGBoost's High-Risk F1 = [0.9909, 0.9995] —
-            we are 94% credibly certain the true population performance lies in this range.
+            All R̂ = 1.00 and ESS Bulk > 4000 confirm perfect MCMC convergence.
+            The Stacking Ensemble achieves the highest posterior mean F1 = 0.791
+            with 94% HDI [0.772, 0.809] — we are 94% credibly certain the true
+            High-Risk F1 lies in this range. XGBoost is used for SHAP due to
+            native TreeExplainer support.
         </div>""", unsafe_allow_html=True)
 
 
