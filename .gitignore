@@ -29,3 +29,5 @@ Thumbs.db
 03_Models_Saved/*.pkl
 03_Models_Saved/*.pt
 03_Models_Saved/*.zip
+
+04_Outputs/figures/Claude outputs/
