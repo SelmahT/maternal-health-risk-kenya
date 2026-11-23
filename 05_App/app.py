@@ -227,7 +227,7 @@ def load_artifacts():
         [35, 0, 1, 1, 5],
     ], columns=FEATURE_CODES, dtype=float)
     dummy_out = dummy.copy()
-    dummy_out[NUMERIC_FEATURES] = scaler.transform(dummy[NUMERIC_FEATURES])
+    dummy_out[NUMERIC_FEATURES] = scaler.transform(dummy[NUMERIC_FEATURES].values)
     explainer = shap.TreeExplainer(xgb_model)
     explainer(dummy_out.values)  # warm-up
 
@@ -239,7 +239,7 @@ def load_artifacts():
 def predict(scaler, model, values: dict):
     df = pd.DataFrame([values], columns=FEATURE_CODES)
     df_out = df.copy().astype(float)
-    df_out[NUMERIC_FEATURES] = scaler.transform(df[NUMERIC_FEATURES])
+    df_out[NUMERIC_FEATURES] = scaler.transform(df[NUMERIC_FEATURES].values)
     df_s = df_out.values
     pred  = int(model.predict(df_s)[0])
     proba = model.predict_proba(df_s)[0]
